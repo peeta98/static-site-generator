@@ -1,34 +1,29 @@
 import unittest
 from textnode import (
     TextNode,
-    text_type_text,
-    text_type_bold,
-    text_type_italic,
-    text_type_code,
-    text_type_image,
-    text_type_link,
-    text_node_to_html_node
+    TextType,
+    text_node_to_html_node,
 )
 
 class TestTextNode(unittest.TestCase):
   def test_eq(self):
-    node1 = TextNode("Test Node", text_type_text, "https://example.com")
-    node2 = TextNode("Test Node", text_type_text, "https://example.com")
+    node1 = TextNode("Test Node", TextType.TEXT.value, "https://example.com")
+    node2 = TextNode("Test Node", TextType.TEXT.value, "https://example.com")
     self.assertEqual(node1, node2)
 
   def test_eq_no_url(self):
-    node1 = TextNode("Test Node", text_type_bold)
-    node2 = TextNode("Test Node", text_type_bold)
+    node1 = TextNode("Test Node", TextType.BOLD.value)
+    node2 = TextNode("Test Node", TextType.BOLD.value)
     self.assertEqual(node1, node2)
 
   def test_eq_false(self):
-    node1 = TextNode("Test Node", text_type_code, "https://example.com")
-    node2 = TextNode("Test Node", text_type_link, "https://example.com")
+    node1 = TextNode("Test Node", TextType.CODE.value, "https://example.com")
+    node2 = TextNode("Test Node", TextType.LINK.value, "https://example.com")
     self.assertNotEqual(node1, node2)
 
   def test_eq_false2(self):
-    node1 = TextNode("Test Node 1", text_type_bold)
-    node2 = TextNode("Test Node 2", text_type_bold)
+    node1 = TextNode("Test Node 1", TextType.BOLD.value)
+    node2 = TextNode("Test Node 2", TextType.BOLD.value)
     self.assertNotEqual(node1, node2)
 
   def test_repr(self):
@@ -37,31 +32,31 @@ class TestTextNode(unittest.TestCase):
 
 class TestTextNodeToHTMLNode(unittest.TestCase):
   def test_text(self):
-    node = TextNode("This is a text node", text_type_text)
+    node = TextNode("This is a text node", TextType.TEXT)
     html_node = text_node_to_html_node(node)
     self.assertEqual(html_node.tag, None)
     self.assertEqual(html_node.value, "This is a text node")
 
   def test_bold(self):
-    node = TextNode("This is bold", text_type_bold)
+    node = TextNode("This is bold", TextType.BOLD)
     html_node = text_node_to_html_node(node)
     self.assertEqual(html_node.tag, "b")
     self.assertEqual(html_node.value, "This is bold")
 
   def test_italic(self):
-    node = TextNode("This is italic", text_type_italic)
+    node = TextNode("This is italic", TextType.ITALIC)
     html_node = text_node_to_html_node(node)
     self.assertEqual(html_node.tag, "i")
     self.assertEqual(html_node.value, "This is italic")
   
   def test_code(self):
-    node = TextNode("This is code", text_type_code)
+    node = TextNode("This is code", TextType.CODE)
     html_node = text_node_to_html_node(node)
     self.assertEqual(html_node.tag, "code")
     self.assertEqual(html_node.value, "This is code")
 
   def test_link(self):
-    node = TextNode("This is link", text_type_link, "https://www.google.com")
+    node = TextNode("This is link", TextType.LINK, "https://www.google.com")
     html_node = text_node_to_html_node(node)
     self.assertEqual(html_node.tag, "a")
     self.assertEqual(html_node.value, "This is link")
@@ -70,7 +65,7 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
     })
 
   def test_image(self):
-    node = TextNode("This is an image", text_type_image, "https://www.boot.dev")
+    node = TextNode("This is an image", TextType.IMAGE, "https://www.boot.dev")
     html_node = text_node_to_html_node(node)
     self.assertEqual(html_node.tag, "img")
     self.assertEqual(html_node.value, "")
